@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Institute - Stylish Navigation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        /* Topbar Styles */
+        .topbar {
+            background: #2c3e50;
+            padding: 10px 0;
+            display: none;
+        }
+
+        .topbar-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .topbar-left {
+            display: flex;
+            gap: 20px;
+        }
+
+        .topbar-left a {
+            color: #ecf0f1;
+            text-decoration: none;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+        }
+
+        .topbar-left a i {
+            color: #3498db;
+            margin-right: 5px;
+        }
+
+        .topbar-right {
+            display: flex;
+            gap: 10px;
+        }
+
+        .topbar-right a {
+            color: #3498db;
+            font-size: 18px;
+            padding: 5px 10px;
+            border-left: 1px solid #34495e;
+            border-right: 1px solid #34495e;
+            transition: color 0.3s ease;
+        }
+
+        .topbar-right a:hover {
+            color: #ecf0f1;
+        }
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 0 2rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar.scrolled {
+            background: rgba(255, 255, 255, 0.98);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.02);
+        }
+
+        .logo img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 2px solid #3498db;
+            margin-right: 10px;
+        }
+
+        .institute-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2c3e50;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        .dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            min-width: 200px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .nav-item:hover .dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-item {
+            display: block;
+            padding: 0.8rem 1.5rem;
+            color: #2c3e50;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-radius: 8px;
+            margin: 0.5rem;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(52, 152, 219, 0.1);
+            color: #3498db;
+        }
+
+        .nav-link {
+            color: #2c3e50;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-link:hover {
+            background: rgba(52, 152, 219, 0.1);
+            color: #3498db;
+        }
+
+        .nav-link.active {
+            background: rgba(52, 152, 219, 0.2);
+            color: #3498db;
+            box-shadow: 0 2px 10px rgba(52, 152, 219, 0.2);
+        }
+
+        .register-btn {
+            background: #3498db;
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            margin-left: 1rem;
+        }
+
+        .register-btn:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background: #2c3e50;
+            margin: 3px 0;
+            transition: 0.3s;
+            border-radius: 3px;
+        }
+
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
+
+        .main-content {
+            margin-top: 100px;
+            padding: 2rem;
+            text-align: center;
+            color: white;
+        }
+
+        .hero-section {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 4rem 0;
+        }
+
+        .content-section {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 3rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .content-section:last-child {
+            border-bottom: none;
+        }
+
+        .content-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            color: white;
+        }
+
+        .content-section p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            opacity: 0.9;
+            color: white;
+        }
+
+        .hero-section h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            animation: fadeInUp 1s ease;
+        }
+
+        .hero-section p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            animation: fadeInUp 1s ease 0.3s both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Mobile Styles */
+        @media (max-width: 768px) {
+            .topbar {
+                display: block;
+            }
+
+            .navbar {
+                padding: 0 1rem;
+                top: 45px;
+            }
+
+            .main-content {
+                margin-top: 145px;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            .nav-menu {
+                position: fixed;
+                right: -100%;
+                top: 70px;
+                flex-direction: column;
+                background: rgba(255, 255, 255, 0.98);
+                backdrop-filter: blur(10px);
+                width: 300px;
+                height: calc(100vh - 70px);
+                text-align: left;
+                transition: 0.3s;
+                box-shadow: -5px 0 20px rgba(0, 0, 0, 0.1);
+                padding: 2rem 0;
+                gap: 0;
+                overflow-y: auto;
+            }
+
+            .nav-menu.active {
+                right: 0;
+            }
+
+            .nav-item {
+                margin: 0;
+                border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            }
+
+            .nav-link {
+                padding: 1rem 2rem;
+                display: block;
+                border-radius: 0;
+                color: #2c3e50;
+                font-weight: 500;
+            }
+
+            .nav-link:hover {
+                background: rgba(52, 152, 219, 0.1);
+                color: #3498db;
+            }
+
+            .nav-link.active {
+                background: rgba(52, 152, 219, 0.2);
+                color: #3498db;
+            }
+
+            .register-btn {
+                margin: 1rem 2rem;
+                display: block;
+                text-align: center;
+            }
+
+            .dropdown {
+                position: static;
+                background: rgba(52, 152, 219, 0.05);
+                box-shadow: none;
+                border-radius: 0;
+                opacity: 1;
+                visibility: visible;
+                transform: none;
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.3s ease;
+            }
+
+            .nav-item.dropdown-open .dropdown {
+                max-height: 300px;
+            }
+
+            .dropdown-item {
+                padding: 0.8rem 3rem;
+                margin: 0;
+                border-radius: 0;
+                color: #555;
+                font-size: 0.9rem;
+            }
+
+            .dropdown-item:hover {
+                background: rgba(52, 152, 219, 0.1);
+                color: #3498db;
+            }
+
+            .dropdown-toggle::after {
+                content: ' ▼';
+                font-size: 0.8rem;
+                transition: transform 0.3s ease;
+            }
+
+            .nav-item.dropdown-open .dropdown-toggle::after {
+                transform: rotate(180deg);
+            }
+
+            .hero-section h1 {
+                font-size: 2rem;
+            }
+
+            .hero-section p {
+                font-size: 1rem;
+            }
+
+            .content-section h2 {
+                font-size: 2rem;
+            }
+
+            .content-section p {
+                font-size: 1rem;
+            }
+
+            .topbar-content {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+
+            .topbar-left {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .topbar {
+                display: block;
+            }
+
+            .navbar {
+                top: 45px;
+            }
+
+            .main-content {
+                margin-top: 145px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .institute-name {
+                font-size: 1.2rem;
+            }
+
+            .hero-section h1 {
+                font-size: 1.8rem;
+            }
+
+            .main-content {
+                padding: 1rem;
+            }
+
+            .logo img {
+                width: 40px;
+                height: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Topbar Start -->
+    <div class="topbar">
+        <div class="topbar-content">
+            <div class="topbar-left">
+                <a href="https://www.google.com/maps/place/ADVANCED+Institute+,+Katol/@21.2683438,78.5846072,17z/data=!3m1!4b1!4m6!3m5!1s0x3bd4590040204a93:0xfa4bceb510f6ab0c!8m2!3d21.2683438!4d78.5846072!16s%2Fg%2F11w1njws7t?entry=ttu&g_ep=EgoyMDI1MDYyNi4wIKXMDSoASAFQAw%3D%3D">
+                    <i class="fas fa-map-marker-alt"></i>Find A Location
+                </a>
+                <a href="tel:8237040536">
+                    <i class="fas fa-phone-alt"></i>8237040536
+                </a>
+                <a href="mailto:advancedkatol5@gmail.com">
+                    <i class="fas fa-envelope"></i>advancedkatol5@gmail.com
+                </a>
+            </div>
+            <div class="topbar-right">
+                <a href="https://www.facebook.com/people/Advanced-Institute/61567378687917/?rdid=V99Zng5QtImWsFXC&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2F14HXkYRWJLQ%2F">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="https://www.whatsapp.com/channel/0029VbALe6FLCoX0nsmMuW2F">
+                    <i class="fab fa-whatsapp"></i>
+                </a>
+                <a href="https://www.instagram.com/advanced_institute/">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <a href="https://www.youtube.com/@Dr.Rampure">
+                    <i class="fab fa-youtube"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    <!-- Topbar End -->
+
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">
+                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCA1MCA1MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjUiIGN5PSIyNSIgcj0iMjUiIGZpbGw9IiMzNDk4ZGIiLz4KPHN2ZyB4PSIxMCIgeT0iMTAiIHdpZHRoPSIzMCIgaGVpZ2h0PSIzMCIgdmlld0JveD0iMCAwIDMwIDMwIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8cGF0aCBkPSJNMTUgNUwyMCAyMEgxMEwxNSA1WiIgZmlsbD0id2hpdGUiLz4KPHN2Zz4KPC9zdmc+" alt="Advanced Institute Logo" />
+                <span class="institute-name">ADVANCED COACHING</span>
+            </a>
+            <ul class="nav-menu" id="nav-menu">
+                <li class="nav-item">
+                    <a href="#home" class="nav-link active">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#about" class="nav-link">About</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#services" class="nav-link dropdown-toggle">Pages</a>
+                    <div class="dropdown">
+                        <a href="#classes" class="dropdown-item">Our Courses</a>
+                        <a href="#team" class="dropdown-item">Our Team</a>
+                        <a href="#routine" class="dropdown-item">Daily Routine</a>
+                        <a href="#why-advanced" class="dropdown-item">Why Advanced</a>
+                        <a href="#testimonial" class="dropdown-item">Testimonial</a>
+                        <a href="#gallery" class="dropdown-item">Gallery</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a href="#contact" class="nav-link">Contact Us</a>
+                </li>
+                <a href="https://docs.google.com/forms/d/1zQh322ZC_4e1MxeKRGH1zupYUcZkdUkAJdPXKXj84Kw/edit" class="register-btn">Register Now</a>
+            </ul>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <section id="home" class="hero-section">
+            <h1>Welcome to Advanced Institute</h1>
+            <p>Experience excellence in JEE, NEET, and CET preparation with our modern teaching methods and proven results. Our responsive navigation and interactive learning environment are designed to help you achieve your academic goals.</p>
+        </section>
+
+        <section id="about" class="content-section">
+            <h2>About Advanced Institute</h2>
+            <p>Founded with a vision to provide quality education, Advanced Institute is known for producing excellent results in JEE, NEET, and CET. Our achievers are proof that consistent learning and self-belief lead to success.</p>
+        </section>
+
+        <section id="classes" class="content-section">
+            <h2>Our Courses</h2>
+            <p>We offer comprehensive courses for JEE Main, JEE Advanced, NEET, and CET. Our structured curriculum and expert faculty ensure that students receive the best preparation for their competitive exams.</p>
+        </section>
+
+        <section id="team" class="content-section">
+            <h2>Our Team</h2>
+            <p>Our experienced faculty members are dedicated to helping students achieve their dreams. With years of expertise in competitive exam preparation, they provide personalized attention to every student.</p>
+        </section>
+
+        <section id="routine" class="content-section">
+            <h2>Daily Routine</h2>
+            <p>We believe in disciplined study habits. Our daily routine includes morning lectures, practice sessions, doubt clearing sessions, and regular tests to ensure comprehensive preparation.</p>
+        </section>
+
+        <section id="why-advanced" class="content-section">
+            <h2>Why Choose Advanced?</h2>
+            <p>Advanced Institute offers proven teaching methodologies, experienced faculty, comprehensive study materials, regular assessments, and a supportive learning environment that helps students excel.</p>
+        </section>
+
+        <section id="testimonial" class="content-section">
+            <h2>Student Testimonials</h2>
+            <p>Our students' success stories speak volumes about our commitment to excellence. Read what our achievers have to say about their journey with Advanced Institute.</p>
+        </section>
+
+        <section id="gallery" class="content-section">
+            <h2>Gallery</h2>
+            <p>Take a virtual tour of our modern facilities, classrooms, and campus. See the environment where future engineers and doctors are nurtured and shaped.</p>
+        </section>
+
+        <section id="contact" class="content-section">
+            <h2>Contact Us</h2>
+            <p>Ready to start your journey with us? Visit our institute near 11 no. School, Katol, or call us at 8237040536. You can also reach us via email at advancedkatol5@gmail.com.</p>
+        </section>
+    </main>
+
+    <!-- Font Awesome for icons -->
+    <script src="https://kit.fontawesome.com/your-fontawesome-kit.js"></script>
+    <script>
+        // Mobile menu toggle
+        const hamburger = document.getElementById('hamburger');
+        const navMenu = document.getElementById('nav-menu');
+        const navbar = document.getElementById('navbar');
+
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            navMenu.classList.toggle('active');
+        });
+
+        // Close mobile menu when clicking on a link
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                hamburger.classList.remove('active');
+                navMenu.classList.remove('active');
+            });
+        });
+
+        // Mobile dropdown toggle
+        document.querySelectorAll('.dropdown-toggle').forEach(toggle => {
+            toggle.addEventListener('click', (e) => {
+                if (window.innerWidth <= 768) {
+                    e.preventDefault();
+                    const parent = toggle.parentElement;
+                    parent.classList.toggle('dropdown-open');
+                }
+            });
+        });
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!navbar.contains(e.target)) {
+                hamburger.classList.remove('active');
+                navMenu.classList.remove('active');
+            }
+        });
+
+        // Add scroll effect to navbar
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 100) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Active link highlighting
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                
+                // Remove active class from all links
+                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                
+                // Add active class to clicked link
+                link.classList.add('active');
+            });
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
